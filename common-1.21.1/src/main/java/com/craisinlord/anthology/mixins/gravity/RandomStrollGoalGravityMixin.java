@@ -22,11 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RandomStrollGoal.class)
 public abstract class RandomStrollGoalGravityMixin {
     @Unique
-    private static final int ANTARCHY$INVERTED_STROLL_ATTEMPTS = 12;
+    private static final int ANTHOLOGY$INVERTED_STROLL_ATTEMPTS = 12;
     @Unique
-    private static final int ANTARCHY$INVERTED_STROLL_HORIZONTAL_RANGE = 7;
+    private static final int ANTHOLOGY$INVERTED_STROLL_HORIZONTAL_RANGE = 7;
     @Unique
-    private static final int ANTARCHY$INVERTED_STROLL_VERTICAL_RANGE = 2;
+    private static final int ANTHOLOGY$INVERTED_STROLL_VERTICAL_RANGE = 2;
 
     @Shadow
     @Final
@@ -120,10 +120,10 @@ public abstract class RandomStrollGoalGravityMixin {
         int baseY = Mth.floor(this.mob.getY() + this.mob.getBbHeight()) - 1;
         int baseZ = Mth.floor(this.mob.getZ());
 
-        for (int attempt = 0; attempt < ANTARCHY$INVERTED_STROLL_ATTEMPTS; attempt++) {
-            int x = baseX + this.mob.getRandom().nextInt(ANTARCHY$INVERTED_STROLL_HORIZONTAL_RANGE * 2 + 1) - ANTARCHY$INVERTED_STROLL_HORIZONTAL_RANGE;
-            int y = baseY + this.mob.getRandom().nextInt(ANTARCHY$INVERTED_STROLL_VERTICAL_RANGE * 2 + 1) - ANTARCHY$INVERTED_STROLL_VERTICAL_RANGE;
-            int z = baseZ + this.mob.getRandom().nextInt(ANTARCHY$INVERTED_STROLL_HORIZONTAL_RANGE * 2 + 1) - ANTARCHY$INVERTED_STROLL_HORIZONTAL_RANGE;
+        for (int attempt = 0; attempt < ANTHOLOGY$INVERTED_STROLL_ATTEMPTS; attempt++) {
+            int x = baseX + this.mob.getRandom().nextInt(ANTHOLOGY$INVERTED_STROLL_HORIZONTAL_RANGE * 2 + 1) - ANTHOLOGY$INVERTED_STROLL_HORIZONTAL_RANGE;
+            int y = baseY + this.mob.getRandom().nextInt(ANTHOLOGY$INVERTED_STROLL_VERTICAL_RANGE * 2 + 1) - ANTHOLOGY$INVERTED_STROLL_VERTICAL_RANGE;
+            int z = baseZ + this.mob.getRandom().nextInt(ANTHOLOGY$INVERTED_STROLL_HORIZONTAL_RANGE * 2 + 1) - ANTHOLOGY$INVERTED_STROLL_HORIZONTAL_RANGE;
             if (this.anthology$isValidInvertedStrollTarget(x, y, z)) {
                 this.wantedX = x + 0.5D;
                 this.wantedY = y + 1.0D - 1.0E-3D;

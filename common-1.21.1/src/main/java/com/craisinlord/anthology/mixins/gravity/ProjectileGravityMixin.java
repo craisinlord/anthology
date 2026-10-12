@@ -40,7 +40,7 @@ public abstract class ProjectileGravityMixin {
                     target = "Lnet/minecraft/world/entity/projectile/Projectile;shoot(DDDFF)V"
             )
     )
-    private void anthology$rotateUndersideLaunchDirection(
+    private void anthology$rotateInvertedLaunchDirection(
             Projectile projectile,
             double x,
             double y,

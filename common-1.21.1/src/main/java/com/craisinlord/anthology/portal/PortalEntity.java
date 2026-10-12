@@ -350,7 +350,7 @@ public abstract class PortalEntity extends Entity {
             PortalCrossing crossing = portal.resolveCrossing(entity, previousBox, currentBox, attemptedMovement);
             if (crossing != null) {
                 if (entity instanceof Player && Boolean.getBoolean(DEBUG_TRAVERSAL_PROPERTY)) {
-                    Anthology.LOGGER.info("Portal traversal accepted path=server portal={} player={} probe={} linked={}",
+                    Anthology.LOGGER.debug("Portal traversal accepted path=server portal={} player={} probe={} linked={}",
                             portal.getUUID(), entity.getUUID(), crossing.probe(), linked.getUUID());
                 }
                 portal.teleportEntity(entity, linked, currentBox, velocity, false);
@@ -388,7 +388,7 @@ public abstract class PortalEntity extends Entity {
             return false;
         }
         if (Boolean.getBoolean(DEBUG_TRAVERSAL_PROPERTY)) {
-            Anthology.LOGGER.info("Portal traversal accepted path=client portal={} player={} end={} velocity={} linked={}",
+            Anthology.LOGGER.debug("Portal traversal accepted path=client portal={} player={} end={} velocity={} linked={}",
                     portal.getUUID(), player.getUUID(), end, velocity, linked.getUUID());
         }
         portal.teleportEntity(player, linked, endBox, velocity, true);
@@ -543,7 +543,7 @@ public abstract class PortalEntity extends Entity {
         PortalEntity linked = this.findLinkedPortal(serverLevel);
         if (linked == null || !linked.isAlive()) {
             if (Boolean.getBoolean(DEBUG_TRAVERSAL_PROPERTY) && this.ageTicks % 40 == 0) {
-                Anthology.LOGGER.info("Portal traversal unavailable portal={} linked={} loaded={}", this.getUUID(), this.linkedPortalId, linked != null);
+                Anthology.LOGGER.debug("Portal traversal unavailable portal={} linked={} loaded={}", this.getUUID(), this.linkedPortalId, linked != null);
             }
             return;
         }

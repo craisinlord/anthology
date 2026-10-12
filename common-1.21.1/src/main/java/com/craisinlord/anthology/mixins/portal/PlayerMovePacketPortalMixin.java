@@ -18,31 +18,31 @@ public abstract class PlayerMovePacketPortalMixin {
     @Unique
     private static final double MAX_CLAIMED_MOVEMENT_SQR = 100.0D;
     @Unique
-    private AABB anthology$portalGunMoveStartBox;
+    private AABB anthology$portalMoveStartBox;
     @Unique
-    private Vec3 anthology$portalGunMoveStartPosition;
+    private Vec3 anthology$portalMoveStartPosition;
 
     @Inject(method = "handleMovePlayer", at = @At("HEAD"))
-    private void anthology$capturePortalGunMoveStart(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
+    private void anthology$capturePortalMoveStart(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
         ServerPlayer player = ((ServerGamePacketListenerImpl) (Object) this).player;
         if (player.getServer() == null || !player.getServer().isSameThread()) {
             return;
         }
-        this.anthology$portalGunMoveStartBox = null;
-        this.anthology$portalGunMoveStartPosition = null;
+        this.anthology$portalMoveStartBox = null;
+        this.anthology$portalMoveStartPosition = null;
         if (!packet.hasPosition() || !PortalRegistry.hasAny(player.level()) || ((ServerGamePacketListenerTeleportAccessor) this).anthology$getAwaitingPositionFromClient() != null) {
             return;
         }
-        this.anthology$portalGunMoveStartBox = player.getBoundingBox();
-        this.anthology$portalGunMoveStartPosition = player.position();
+        this.anthology$portalMoveStartBox = player.getBoundingBox();
+        this.anthology$portalMoveStartPosition = player.position();
     }
 
     @Inject(method = "handleMovePlayer", at = @At("RETURN"))
     private void anthology$teleportPlayerOnPortalCrossing(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
-        AABB startBox = this.anthology$portalGunMoveStartBox;
-        Vec3 startPosition = this.anthology$portalGunMoveStartPosition;
-        this.anthology$portalGunMoveStartBox = null;
-        this.anthology$portalGunMoveStartPosition = null;
+        AABB startBox = this.anthology$portalMoveStartBox;
+        Vec3 startPosition = this.anthology$portalMoveStartPosition;
+        this.anthology$portalMoveStartBox = null;
+        this.anthology$portalMoveStartPosition = null;
         if (startBox == null || startPosition == null) {
             return;
         }

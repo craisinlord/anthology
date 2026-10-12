@@ -12,7 +12,7 @@ A library mod for Minecraft 1.21.1 (NeoForge and Fabric) with the engine systems
 - **Cross-dimension travel:** safe-landing teleports between dimensions
 
 On its own it adds three effects (Inverted, Dilated, Contracted), the
-time-dilation field entity and a `/gravity` command. Everything else does nothing until a mod uses it.
+time-dilation field entity, and the `/gravity` and `/timedilation` commands. Everything else does nothing until a mod uses it.
 
 ### Where to register hooks
 
@@ -103,6 +103,14 @@ double rate = TimeDilationApi.getRate(entity);
 | `addChronosphereLevelSource(ToIntFunction<LivingEntity>)` | Supplies an armor or enchantment level that grants a personal field. |
 
 Implement **`TimeDilationAnchor`** on an entity to choose where a field attached to it is centred.
+
+Ops can run these commands (permission level 2):
+- `/timedilation create <center> <radius> <rate> <durationTicks>` creates a field at a position.
+- `/timedilation create_here <radius> <rate> <durationTicks>` creates one where you stand.
+- `/timedilation list` lists fields.
+- `/timedilation clear` removes them.
+
+A duration of `-1` lasts until cleared. Command rates run from `0.05` to `1.0`.
 
 ## Beams
 

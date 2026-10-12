@@ -4,5 +4,7 @@
   "effect.anthology.dilated": "Temporal Dilation",
   "effect.anthology.dilated.description": "Slows the passage of time for the affected entity.",
   "effect.anthology.contracted": "Temporal Contraction",
-  "effect.anthology.contracted.description": "Speeds the passage of time for the affected entity."
+  "effect.anthology.contracted.description": "Speeds the passage of time for the affected entity.",
+  "entity.anthology.time_dilation_field": "Time Dilation Field",
+  "entity.anthology.multipart_part": "Multipart Part"
 }

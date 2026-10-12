@@ -17,52 +17,52 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = Entity.class, priority = 1100)
 public abstract class EntityPortalCollisionMixin {
     @Unique
-    private AABB anthology$portalGunStartBox;
+    private AABB anthology$portalStartBox;
     @Unique
-    private AABB anthology$portalGunMoveStartBox;
+    private AABB anthology$portalMoveStartBox;
     @Unique
-    private Vec3 anthology$portalGunMoveStartVelocity;
+    private Vec3 anthology$portalMoveStartVelocity;
 
     @Inject(method = "move", at = @At("HEAD"))
-    private void anthology$capturePortalGunMovementStart(MoverType type, Vec3 movement, CallbackInfo ci) {
+    private void anthology$capturePortalMovementStart(MoverType type, Vec3 movement, CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
         if (!PortalRegistry.hasAny(entity.level())) {
-            this.anthology$portalGunMoveStartBox = null;
-            this.anthology$portalGunMoveStartVelocity = null;
+            this.anthology$portalMoveStartBox = null;
+            this.anthology$portalMoveStartVelocity = null;
             return;
         }
-        this.anthology$portalGunMoveStartBox = entity.getBoundingBox();
-        this.anthology$portalGunMoveStartVelocity = entity.getDeltaMovement();
+        this.anthology$portalMoveStartBox = entity.getBoundingBox();
+        this.anthology$portalMoveStartVelocity = entity.getDeltaMovement();
     }
 
     @Inject(method = "move", at = @At("RETURN"))
     private void anthology$teleportMobOnPortalCrossing(MoverType type, Vec3 movement, CallbackInfo ci) {
-        if (this.anthology$portalGunMoveStartBox == null) {
+        if (this.anthology$portalMoveStartBox == null) {
             return;
         }
-        AABB startBox = this.anthology$portalGunMoveStartBox;
-        Vec3 startVelocity = this.anthology$portalGunMoveStartVelocity;
-        this.anthology$portalGunMoveStartBox = null;
-        this.anthology$portalGunMoveStartVelocity = null;
+        AABB startBox = this.anthology$portalMoveStartBox;
+        Vec3 startVelocity = this.anthology$portalMoveStartVelocity;
+        this.anthology$portalMoveStartBox = null;
+        this.anthology$portalMoveStartVelocity = null;
         if (startBox != null && startVelocity != null) {
             PortalEntity.teleportEntityAfterMovement((Entity) (Object) this, startBox, startVelocity);
         }
     }
 
     @Inject(method = "collide", at = @At("HEAD"))
-    private void anthology$capturePortalGunStartBox(Vec3 movement, CallbackInfoReturnable<Vec3> cir) {
+    private void anthology$capturePortalStartBox(Vec3 movement, CallbackInfoReturnable<Vec3> cir) {
         Entity entity = (Entity) (Object) this;
-        this.anthology$portalGunStartBox = PortalRegistry.hasAny(entity.level()) ? entity.getBoundingBox() : null;
+        this.anthology$portalStartBox = PortalRegistry.hasAny(entity.level()) ? entity.getBoundingBox() : null;
     }
 
     @Inject(method = "collide", at = @At("RETURN"), cancellable = true)
     private void anthology$restorePortalCrossingMotion(Vec3 movement, CallbackInfoReturnable<Vec3> cir) {
-        if (this.anthology$portalGunStartBox == null) {
+        if (this.anthology$portalStartBox == null) {
             return;
         }
         Entity entity = (Entity) (Object) this;
         Vec3 collided = cir.getReturnValue();
-        Vec3 adjusted = PortalCollision.resolveCollision(entity, this.anthology$portalGunStartBox, movement, collided);
+        Vec3 adjusted = PortalCollision.resolveCollision(entity, this.anthology$portalStartBox, movement, collided);
         if (adjusted != collided) {
             cir.setReturnValue(adjusted);
         }

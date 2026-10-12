@@ -1,0 +1,82 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+
+base {
+    archivesName = mod_id
+}
+version = "${mod_version}+1.21.1-neoforge"
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs project(':common-1.21.1').sourceSets.main.java.srcDirs
+        }
+        resources {
+            srcDir project(':common-1.21.1').sourceSets.main.resources.srcDirs
+        }
+    }
+}
+
+neoForge {
+    version = neoforge_version
+    mods {
+        create(mod_id) {
+            sourceSet sourceSets.main
+        }
+    }
+    runs {
+        client { client() }
+        server { server() }
+    }
+}
+
+dependencies {
+    compileOnly "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
+    compileOnly(files(zipTree(rootProject.file("compile_jars/sodium-neoforge-0.8.13+mc1.21.1.jar")).matching { include "META-INF/jarjar/net.caffeinemc.sodium-neoforge-*-mod.jar" }))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras}"))
+}
+
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    var replaceProperties = [
+        version        : project.version,
+        mod_id         : mod_id,
+        mod_name       : mod_name,
+        mod_description: mod_description,
+        mod_author     : mod_author
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = rootProject.group
+            artifactId = "${mod_id}-neoforge-1.21.1"
+            version = project.version
+
+            artifact jar
+            artifact sourcesJar
+
+            pom {
+                name = "${mod_name} (NeoForge 1.21.1)"
+                description = mod_description
+            }
+        }
+    }
+}

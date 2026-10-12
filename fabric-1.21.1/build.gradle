@@ -1,0 +1,98 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap'
+}
+
+base {
+    archivesName = mod_id
+}
+version = "${mod_version}+1.21.1-fabric"
+
+tasks.withType(AbstractCopyTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs project(':common-1.21.1').sourceSets.main.java.srcDirs
+        }
+        resources {
+            srcDir project(':common-1.21.1').sourceSets.main.resources.srcDirs
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    modCompileOnly "software.bernie.geckolib:geckolib-fabric-1.21.1:${geckolib_version}"
+    compileOnly(files(zipTree(rootProject.file("compile_jars/sodium-neoforge-0.8.13+mc1.21.1.jar")).matching { include "META-INF/jarjar/net.caffeinemc.sodium-neoforge-*-mod.jar" }))
+
+    annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras}"))
+}
+
+loom {
+    mixin {
+        useLegacyMixinAp = true
+        defaultRefmapName = "anthology.mixins.refmap.json"
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+        version              : project.version,
+        minecraft_version    : minecraft_version,
+        fabric_loader_version: fabric_loader_version,
+        mod_id               : mod_id,
+        mod_name             : mod_name,
+        mod_description      : mod_description,
+        mod_author           : mod_author,
+        license              : license,
+        homepage_url         : homepage_url,
+        issues_url           : issues_url,
+        sources_url          : sources_url
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties
+    }
+
+    doLast {
+        ['anthology-common.mixins.json', 'anthology-fabric.mixins.json', 'anthology-sodium.mixins.json'].each { configName ->
+            var mixinConfig = new File(destinationDir, configName)
+            var json = new groovy.json.JsonSlurper().parse(mixinConfig)
+            json.put('refmap', 'anthology.mixins.refmap.json')
+            mixinConfig.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json))
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = rootProject.group
+            artifactId = "${mod_id}-fabric-1.21.1"
+            version = project.version
+
+            artifact(project.tasks.named('remapJar'))
+            artifact(project.tasks.named('remapSourcesJar')) {
+                classifier = 'sources'
+            }
+
+            pom {
+                name = "${mod_name} (Fabric 1.21.1)"
+                description = mod_description
+            }
+        }
+    }
+}

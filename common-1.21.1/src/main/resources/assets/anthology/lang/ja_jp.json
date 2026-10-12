@@ -1,0 +1,5 @@
+{
+  "effect.anthology.inverted": "重力反転",
+  "effect.anthology.inverted.description": "対象の重力を反転させます。",
+  "effect.anthology.dilated.description": "影響を受けたエンティティの時間の流れを遅くします。"
+}

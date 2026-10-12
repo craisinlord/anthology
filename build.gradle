@@ -1,0 +1,51 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+}
+
+allprojects {
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
+
+    group = rootProject.maven_group
+
+    repositories {
+        maven {
+            name = "CurseMaven"
+            url = "https://www.cursemaven.com"
+            metadataSources {
+                artifact()
+            }
+            content {
+                includeGroupByRegex "curse\\.maven"
+            }
+        }
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://maven.neoforged.net/releases" }
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "GeckoLib"
+                    url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+                }
+            }
+            filter {
+                includeGroup("software.bernie.geckolib")
+            }
+        }
+        maven { url "https://api.modrinth.com/maven/" }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
+
+tasks.named('jar') {
+    enabled = false
+}

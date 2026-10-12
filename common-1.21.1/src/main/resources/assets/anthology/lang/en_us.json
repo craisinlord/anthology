@@ -1,0 +1,8 @@
+{
+  "effect.anthology.inverted": "Inverted",
+  "effect.anthology.inverted.description": "Inverts the target's gravity.",
+  "effect.anthology.dilated": "Temporal Dilation",
+  "effect.anthology.dilated.description": "Slows the passage of time for the affected entity.",
+  "effect.anthology.contracted": "Temporal Contraction",
+  "effect.anthology.contracted.description": "Speeds the passage of time for the affected entity."
+}

@@ -252,8 +252,7 @@ server thread.
 ## Old Antarchy IDs
 
 Worlds made with Antarchy before 2.2.2 keep working. `antarchy:inverted`, `antarchy:dilated`,
-`antarchy:contracted` and `antarchy:time_dilation_field` are aliases of the `anthology:` IDs, and Anthology reads
-the old NBT keys too.
+`antarchy:contracted` and `antarchy:time_dilation_field` Anthology reads too.
 
 ## License
 

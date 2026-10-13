@@ -15,4 +15,3 @@ build
 .gradle-user
 run
 src/generated
-/compile_jars/

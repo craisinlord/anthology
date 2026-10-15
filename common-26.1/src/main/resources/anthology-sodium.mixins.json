@@ -1,0 +1,16 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.craisinlord.anthology.mixins",
+  "plugin": "com.craisinlord.anthology.mixins.AnthologyMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "compat.sodium.SodiumWorldRendererAccessor",
+    "compat.sodium.RenderSectionManagerAccessor",
+    "compat.sodium.UniformBufferManagerAccessor",
+    "compat.sodium.RenderSectionManagerPortalTasksMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

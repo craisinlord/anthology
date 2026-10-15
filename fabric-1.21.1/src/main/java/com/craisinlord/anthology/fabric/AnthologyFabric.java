@@ -56,12 +56,8 @@ public final class AnthologyFabric implements ModInitializer {
                 AnthologyFabricClientBridge.sendToServer(payload);
             }
         });
-        for (AnthologyNetwork.ClientboundPayload<?> payload : AnthologyNetwork.clientbound()) {
-            registerClientboundType(payload);
-        }
-        for (AnthologyNetwork.ServerboundPayload<?> payload : AnthologyNetwork.serverbound()) {
-            registerServerbound(payload);
-        }
+        AnthologyNetwork.onClientbound(AnthologyFabric::registerClientboundType);
+        AnthologyNetwork.onServerbound(AnthologyFabric::registerServerbound);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
             GravityCommand.register(dispatcher);

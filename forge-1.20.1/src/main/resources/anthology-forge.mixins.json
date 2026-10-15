@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.craisinlord.anthology.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MultipartEntityBridgeMixin",
+    "MultipartEntityLevelRegistryMixin",
+    "ServerLevelPartEntitiesAccessor"
+  ],
+  "client": [
+    "ClientLevelPartEntitiesAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

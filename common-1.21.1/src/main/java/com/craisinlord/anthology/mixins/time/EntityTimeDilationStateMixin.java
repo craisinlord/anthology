@@ -24,6 +24,30 @@ public abstract class EntityTimeDilationStateMixin implements TimeDilationEntity
     private double anthology$timeDilationCeiling = TimeDilationMath.MAX_RATE;
     @Unique
     private final Map<String, Double> anthology$personalTimeDilationRates = new HashMap<>();
+    @Unique
+    private double anthology$dilatedTickCount = -1.0D;
+    @Unique
+    private int anthology$dilatedTickStamp;
+
+    @Override
+    public double anthology$getDilatedTickCount() {
+        return this.anthology$dilatedTickCount;
+    }
+
+    @Override
+    public void anthology$setDilatedTickCount(double tickCount) {
+        this.anthology$dilatedTickCount = tickCount;
+    }
+
+    @Override
+    public int anthology$getDilatedTickStamp() {
+        return this.anthology$dilatedTickStamp;
+    }
+
+    @Override
+    public void anthology$setDilatedTickStamp(int stamp) {
+        this.anthology$dilatedTickStamp = stamp;
+    }
 
     @Override
     public double anthology$getTimeDilationCeiling() {

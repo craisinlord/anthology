@@ -1,0 +1,96 @@
+plugins {
+    id 'net.neoforged.moddev'
+}
+
+base {
+    archivesName = mod_id
+}
+version = "${mod_version}+26.2-neoforge"
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs project(':common-26.2').sourceSets.main.java.srcDirs
+        }
+        resources {
+            srcDir project(':common-26.2').sourceSets.main.resources.srcDirs
+        }
+    }
+}
+
+neoForge {
+    version = neoforge_version_26_2
+    mods {
+        create(mod_id) {
+            sourceSet sourceSets.main
+        }
+    }
+    runs {
+        client { client() }
+        server { server() }
+    }
+}
+
+dependencies {
+    compileOnly "curse.maven:geckolib-${geckolib_curseforge_id}:${geckolib_curseforge_file_id_neoforge_26_2}"
+    compileOnly files(rootProject.file("compile_jars/sodium-fabric-0.9.2+mc26.2.jar"))
+}
+
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    var replaceProperties = [
+        version        : project.version,
+        mod_id         : mod_id,
+        mod_name       : mod_name,
+        mod_description: mod_description,
+        mod_author     : mod_author,
+        homepage_url   : homepage_url,
+        issues_url     : issues_url
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = rootProject.group
+            artifactId = "${mod_id}-neoforge-26.2"
+            version = project.version
+
+            artifact jar
+            artifact sourcesJar
+
+            pom {
+                name = "${mod_name} (NeoForge 26.2)"
+                description = mod_description
+            }
+        }
+    }
+}
+
+
+configurations {
+    sodiumRuntime
+}
+
+neoForge.runs.named('client') {
+    additionalRuntimeClasspathConfiguration.extendsFrom(configurations.sodiumRuntime)
+}
+
+dependencies {
+    sodiumRuntime files(rootProject.file('compile_jars/sodium-neoforge-0.9.2+mc26.2.jar'))
+}

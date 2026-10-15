@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.craisinlord.anthology.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MappedRegistryLegacyIdsMixin",
+    "MultipartServerLevelRegistryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "client.GameRendererCameraShakeMixin",
+    "client.MultipartClientLevelRegistryMixin",
+    "client.MultipartClientSpawnMixin",
+    "client.RenderTargetDepthStencilMixin"
+  ]
+}

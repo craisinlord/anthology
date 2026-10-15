@@ -43,9 +43,7 @@ public final class AnthologyFabricClient implements ClientModInitializer {
             CameraShake.tick();
             PortalRollClientState.tick(client);
         });
-        for (AnthologyNetwork.ClientboundPayload<?> payload : AnthologyNetwork.clientbound()) {
-            registerClientboundReceiver(payload);
-        }
+        AnthologyNetwork.onClientbound(AnthologyFabricClient::registerClientboundReceiver);
     }
 
     private static <T extends CustomPacketPayload> void registerClientboundReceiver(AnthologyNetwork.ClientboundPayload<T> payload) {

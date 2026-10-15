@@ -28,4 +28,12 @@ public interface TimeDilationEntityAccess {
     boolean anthology$isApplyingExternalImpulse();
 
     void anthology$setApplyingExternalImpulse(boolean applying);
+
+    double anthology$getDilatedTickCount();
+
+    void anthology$setDilatedTickCount(double tickCount);
+
+    int anthology$getDilatedTickStamp();
+
+    void anthology$setDilatedTickStamp(int stamp);
 }

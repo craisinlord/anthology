@@ -91,6 +91,14 @@ public class TimeDilationFieldEntity extends Entity {
         return this.ownerId != null && this.level() instanceof ServerLevel level ? level.getEntity(this.ownerId) : null;
     }
 
+    public boolean canBeDispelled() {
+        return !this.chronosphere;
+    }
+
+    public void dispel() {
+        this.discard();
+    }
+
     public boolean isChronosphere() {
         return this.chronosphere;
     }

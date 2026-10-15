@@ -1,0 +1,81 @@
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+base {
+    archivesName = mod_id
+}
+version = "${mod_version}+26.3-fabric"
+
+tasks.withType(AbstractCopyTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs project(':common-26.3').sourceSets.main.java.srcDirs
+        }
+        resources {
+            srcDir project(':common-26.3').sourceSets.main.resources.srcDirs
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version_26_3}"
+
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version_26_3}"
+    api "net.fabricmc.fabric-api:fabric-api:${fabric_api_version_26_3}"
+    compileOnly "maven.modrinth:geckolib:${geckolib_modrinth_version_fabric_26_3}"
+    compileOnly files(rootProject.file("compile_jars/sodium-fabric-0.9.3-alpha.1+mc26.3.jar"))
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+        version              : project.version,
+        minecraft_version    : minecraft_version_26_3,
+        fabric_loader_version: fabric_loader_version_26_3,
+        mod_id               : mod_id,
+        mod_name             : mod_name,
+        mod_description      : mod_description,
+        mod_author           : mod_author,
+        license              : license,
+        homepage_url         : homepage_url,
+        issues_url           : issues_url,
+        sources_url          : sources_url
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = rootProject.group
+            artifactId = "${mod_id}-fabric-26.3"
+            version = project.version
+
+            artifact jar
+            artifact sourcesJar
+
+            pom {
+                name = "${mod_name} (Fabric 26.3)"
+                description = mod_description
+            }
+        }
+    }
+}
+
+
+dependencies {
+    runtimeOnly files(rootProject.file('compile_jars/sodium-fabric-0.9.3-alpha.1+mc26.3.jar'))
+}

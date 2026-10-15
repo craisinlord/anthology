@@ -1,5 +1,6 @@
 package com.craisinlord.anthology;
 
+import com.craisinlord.anthology.compat.irons_spellbooks.IronsSpellbooksCompat;
 import com.craisinlord.anthology.gravity.GravitySync;
 import com.craisinlord.anthology.multipart.MultipartFramework;
 import com.craisinlord.anthology.portal.PortalEngine;
@@ -26,5 +27,6 @@ public final class Anthology {
         CameraShakeSync.register();
         MultipartFramework.register();
         PortalEngine.register();
+        IronsSpellbooksCompat.init();
     }
 }

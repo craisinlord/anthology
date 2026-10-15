@@ -49,3 +49,24 @@ allprojects {
 tasks.named('jar') {
     enabled = false
 }
+
+def registerStandaloneTasks = { String moduleDirName, String taskPrefix ->
+    def standaloneDir = file(moduleDirName)
+    def wrapperName = providers.systemProperty('os.name').get().toLowerCase().contains('win')
+            ? 'gradlew.bat'
+            : 'gradlew'
+    def wrapper = new File(standaloneDir, wrapperName)
+
+    ['build', 'assemble', 'clean', 'runClient', 'runServer'].each { taskName ->
+        tasks.register("${taskPrefix}${taskName.capitalize()}", Exec) {
+            group = moduleDirName
+            description = "Runs '${taskName}' inside ${moduleDirName}"
+            workingDir = standaloneDir
+            environment 'GRADLE_USER_HOME', gradle.gradleUserHomeDir.absolutePath
+            commandLine wrapper.absolutePath, taskName
+        }
+    }
+}
+
+registerStandaloneTasks('forge-1.20.1', 'forge1201')
+registerStandaloneTasks('fabric-1.20.1', 'fabric1201')

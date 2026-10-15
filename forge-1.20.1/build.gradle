@@ -1,0 +1,203 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+def anthologyProperties = new Properties()
+file('../gradle.properties').withInputStream { anthologyProperties.load(it) }
+anthologyProperties.each { key, value ->
+    if (!project.hasProperty(key)) {
+        project.ext.set(key, value)
+    }
+}
+
+group = maven_group
+version = "${mod_version}+1.20.1-forge"
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(17) }
+    withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.minecraftforge.net' }
+    maven { url = 'https://maven.parchmentmc.org' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven {
+        name = 'CurseMaven'
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroupByRegex 'curse\\.maven'
+        }
+    }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
+        name = 'GeckoLib'
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup 'software.bernie.geckolib'
+            includeGroup 'com.eliotlash.mclib'
+        }
+    }
+    flatDir {
+        name = 'AnthologyCompileJars'
+        dirs file('../compile_jars')
+        content {
+            includeGroup 'anthology.compile_jars'
+        }
+    }
+}
+
+base {
+    archivesName = mod_id
+}
+
+tasks.withType(AbstractCopyTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+jarJar.enable()
+
+minecraft {
+    mappings channel: 'parchment', version: parchment_version_1_20_1
+
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            jvmArgs(
+                "-Dmixin.env.remapRefMap=true",
+                "-Dmixin.env.refMapRemappingFile=${projectDir}/build/createSrgToMcp/output.srg"
+            )
+        }
+
+        server {
+            args '--nogui'
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += file('../common-1.20.1/src/main/java')
+        }
+        resources {
+            srcDirs += file('../common-1.20.1/src/main/resources')
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version_1_20_1}-${forge_version_1_20_1}"
+
+    compileOnly fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version_1_20_1}:${geckolib_version_1_20_1}")
+    compileOnly fg.deobf("maven.modrinth:alexs-caves:${alexscaves_modrinth_version_forge_1_20_1}")
+    compileOnly fg.deobf("maven.modrinth:ars-nouveau:${ars_nouveau_modrinth_version_forge_1_20_1}")
+    compileOnly fg.deobf("maven.modrinth:irons-spells-n-spellbooks:${irons_spellbooks_modrinth_version_forge_1_20_1}")
+    compileOnly fg.deobf("maven.modrinth:scorched-guns-2:${scorched_guns_modrinth_version_forge_1_20_1}")
+    compileOnly fg.deobf("anthology.compile_jars:embeddium:0.3.31+mc1.20.1")
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras}"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras}")) {
+        jarJar.ranged(it, "[${mixin_extras},)")
+    }
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.mixins.refmap.json"
+    config "${mod_id}-common.mixins.json"
+    config "${mod_id}-forge.mixins.json"
+    config "${mod_id}-sodium.mixins.json"
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+        version        : project.version,
+        mod_id         : mod_id,
+        mod_name       : mod_name,
+        mod_description: mod_description,
+        mod_author     : mod_author,
+        license        : license,
+        homepage_url   : homepage_url,
+        issues_url     : issues_url
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties
+    }
+
+    doLast {
+        ["${mod_id}-common.mixins.json", "${mod_id}-forge.mixins.json", "${mod_id}-sodium.mixins.json"].each { configName ->
+            var mixinConfig = new File(destinationDir, configName)
+            var json = new groovy.json.JsonSlurper().parse(mixinConfig)
+            json.put('refmap', "${mod_id}.mixins.refmap.json")
+            mixinConfig.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json))
+        }
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    archiveClassifier = 'slim'
+    finalizedBy 'reobfJar'
+}
+
+tasks.named('jarJar').configure {
+    archiveClassifier = ''
+    finalizedBy 'reobfJarJar'
+}
+
+reobf {
+    jarJar { }
+}
+
+tasks.named('build').configure {
+    dependsOn 'jarJar'
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            groupId = project.group
+            artifactId = "${mod_id}-forge-1.20.1"
+            version = project.version
+
+            artifact tasks.named('jarJar')
+            artifact sourcesJar
+
+            pom {
+                name = "${mod_name} (Forge 1.20.1)"
+                description = mod_description
+            }
+        }
+    }
+}
+
+
+dependencies {
+    runtimeOnly fg.deobf('anthology.compile_jars:embeddium:0.3.31+mc1.20.1')
+}

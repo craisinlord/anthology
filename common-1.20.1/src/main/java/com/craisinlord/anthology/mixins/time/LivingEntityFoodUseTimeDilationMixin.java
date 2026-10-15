@@ -1,0 +1,29 @@
+package com.craisinlord.anthology.mixins.time;
+
+import com.craisinlord.anthology.time.TimeDilationApi;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+@Mixin(LivingEntity.class)
+public abstract class LivingEntityFoodUseTimeDilationMixin {
+    @Shadow
+    protected abstract void updatingUsingItem();
+
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;updatingUsingItem()V"))
+    private void anthology$advanceFoodUse(LivingEntity entity) {
+        ItemStack stack = entity.getUseItem();
+        if (stack.isEmpty() || !stack.isEdible()) {
+            this.updatingUsingItem();
+            return;
+        }
+
+        int ticks = TimeDilationApi.consumeTicks(entity, "living_food_use");
+        for (int i = 0; i < ticks && entity.isUsingItem(); i++) {
+            this.updatingUsingItem();
+        }
+    }
+}

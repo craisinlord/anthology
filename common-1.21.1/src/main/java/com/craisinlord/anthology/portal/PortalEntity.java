@@ -186,6 +186,14 @@ public abstract class PortalEntity extends Entity {
         this.ageTicks = 0;
     }
 
+    public boolean canBeDispelled() {
+        return true;
+    }
+
+    public void dispel() {
+        this.discard();
+    }
+
     public PortalEntity getLinkedPortal() {
         UUID linkedId = this.getLinkedPortalId();
         if (linkedId == null) {

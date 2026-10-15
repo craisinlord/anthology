@@ -197,6 +197,36 @@ public final class TimeDilationApi {
         return 1;
     }
 
+    public static int getDilatedTickCount(Entity entity) {
+        if (!(entity instanceof TimeDilationEntityAccess access)) {
+            return entity.tickCount;
+        }
+        double count = access.anthology$getDilatedTickCount();
+        int stamp = access.anthology$getDilatedTickStamp();
+        if (count < 0.0D || entity.tickCount < stamp) {
+            count = entity.tickCount;
+        } else if (entity.tickCount > stamp) {
+            double rate = Math.max(TimeDilationMath.MIN_RATE, Math.min(TimeDilationMath.ABSOLUTE_MAX_RATE, getRate(entity)));
+            count += (entity.tickCount - stamp) * rate;
+        }
+        access.anthology$setDilatedTickCount(count);
+        access.anthology$setDilatedTickStamp(entity.tickCount);
+        return (int) Math.floor(count + 1.0E-9D);
+    }
+
+    public static void runScaledTick(Entity entity, Runnable tick) {
+        int ticks = consumeTicks(entity, "scaled_entity_tick");
+        if (ticks == 1) {
+            tick.run();
+            return;
+        }
+        entity.tickCount--;
+        for (int i = 0; i < ticks && !entity.isRemoved(); i++) {
+            entity.tickCount++;
+            tick.run();
+        }
+    }
+
     public static int scaleCooldownTicks(Entity entity, int ticks) {
         double rate = getRate(entity);
         if (ticks <= 0 || Math.abs(rate - TimeDilationMath.NORMAL_RATE) < 0.001D) {

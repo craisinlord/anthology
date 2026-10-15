@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -36,6 +37,8 @@ public final class AnthologyNetwork {
 
     private static final List<ClientboundPayload<?>> CLIENTBOUND = new ArrayList<>();
     private static final List<ServerboundPayload<?>> SERVERBOUND = new ArrayList<>();
+    private static final List<Consumer<ClientboundPayload<?>>> CLIENTBOUND_LISTENERS = new ArrayList<>();
+    private static final List<Consumer<ServerboundPayload<?>>> SERVERBOUND_LISTENERS = new ArrayList<>();
     private static Sender sender = new Sender() {
         @Override
         public void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
@@ -58,7 +61,13 @@ public final class AnthologyNetwork {
             StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
             BiConsumer<T, Player> handler
     ) {
-        CLIENTBOUND.add(new ClientboundPayload<>(type, codec, handler));
+        ClientboundPayload<T> payload = new ClientboundPayload<>(type, codec, handler);
+        List<Consumer<ClientboundPayload<?>>> listeners;
+        synchronized (CLIENTBOUND) {
+            CLIENTBOUND.add(payload);
+            listeners = new ArrayList<>(CLIENTBOUND_LISTENERS);
+        }
+        listeners.forEach(listener -> listener.accept(payload));
     }
 
     public static <T extends CustomPacketPayload> void registerServerbound(
@@ -66,7 +75,31 @@ public final class AnthologyNetwork {
             StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
             BiConsumer<T, ServerPlayer> handler
     ) {
-        SERVERBOUND.add(new ServerboundPayload<>(type, codec, handler));
+        ServerboundPayload<T> payload = new ServerboundPayload<>(type, codec, handler);
+        List<Consumer<ServerboundPayload<?>>> listeners;
+        synchronized (SERVERBOUND) {
+            SERVERBOUND.add(payload);
+            listeners = new ArrayList<>(SERVERBOUND_LISTENERS);
+        }
+        listeners.forEach(listener -> listener.accept(payload));
+    }
+
+    public static void onClientbound(Consumer<ClientboundPayload<?>> listener) {
+        List<ClientboundPayload<?>> existing;
+        synchronized (CLIENTBOUND) {
+            CLIENTBOUND_LISTENERS.add(listener);
+            existing = new ArrayList<>(CLIENTBOUND);
+        }
+        existing.forEach(listener);
+    }
+
+    public static void onServerbound(Consumer<ServerboundPayload<?>> listener) {
+        List<ServerboundPayload<?>> existing;
+        synchronized (SERVERBOUND) {
+            SERVERBOUND_LISTENERS.add(listener);
+            existing = new ArrayList<>(SERVERBOUND);
+        }
+        existing.forEach(listener);
     }
 
     public static List<ClientboundPayload<?>> clientbound() {

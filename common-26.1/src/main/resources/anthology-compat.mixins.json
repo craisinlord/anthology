@@ -1,0 +1,21 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.craisinlord.anthology.mixins",
+  "plugin": "com.craisinlord.anthology.mixins.AnthologyMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "compat.alexscaves.AlexsCavesCandyCaneHookMixin",
+    "compat.alexscaves.AlexsCavesDepthChargeMixin",
+    "compat.alexscaves.AlexsCavesTephraMixin",
+    "compat.alexscaves.AlexsCavesWaterBoltMixin",
+    "compat.ars_nouveau.ArsNouveauProjectileGravityMixin",
+    "compat.irons_spellbooks.IronsSpellbooksProjectileGravityMixin",
+    "compat.scguns.ScgunsArrowGravityMixin",
+    "compat.scguns.ScgunsProjectileEntityAccessMixin",
+    "compat.scguns.ScgunsProjectileEntityGravityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

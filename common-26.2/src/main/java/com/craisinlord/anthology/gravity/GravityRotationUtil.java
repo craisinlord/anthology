@@ -86,6 +86,14 @@ public final class GravityRotationUtil {
         return rotationAroundNegativeZ(-180.0F * GravityApi.getGravityFlipProgress(entity, partialTick));
     }
 
+    public static Quaternionf getWorldRotationQuaternion(float flipProgress) {
+        return rotationAroundNegativeZ(180.0F * flipProgress);
+    }
+
+    public static Quaternionf getCameraRotationQuaternion(float flipProgress) {
+        return rotationAroundNegativeZ(-180.0F * flipProgress);
+    }
+
     public static Vec2 rotWorldToPlayer(float yaw, float pitch, GravityDirection direction) {
         Vec3 vector = vecWorldToPlayer(rotToVec(yaw, pitch), direction);
         return vecToRot(vector);

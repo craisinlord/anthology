@@ -17,7 +17,7 @@ public abstract class RenderSectionManagerPortalTasksMixin {
     @Shadow(remap = false)
     private Map<ChunkUpdateType, ArrayDeque<RenderSection>> rebuildLists;
 
-    @Inject(method = "updateChunks", at = @At("HEAD"), remap = false)
+    @Inject(require = 0, method = "updateChunks", at = @At("HEAD"), remap = false)
     private void anthology$addPortalViewTasks(boolean updateImmediately, CallbackInfo ci) {
         SodiumPortalTerrain.drainPendingTasks(this.rebuildLists);
     }

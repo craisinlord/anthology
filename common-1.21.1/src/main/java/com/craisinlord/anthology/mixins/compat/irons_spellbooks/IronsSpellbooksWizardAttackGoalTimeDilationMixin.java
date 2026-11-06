@@ -16,7 +16,7 @@ public abstract class IronsSpellbooksWizardAttackGoalTimeDilationMixin {
     @Final
     protected PathfinderMob mob;
 
-    @WrapMethod(method = "tick")
+    @WrapMethod(require = 0, method = "tick")
     private void anthology$scaleAttackTimers(Operation<Void> original) {
         int ticks = TimeDilationApi.consumeTicks(this.mob, "irons_wizard_attack_goal");
         for (int i = 0; i < ticks && this.mob.isAlive(); i++) {

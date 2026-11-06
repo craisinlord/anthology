@@ -21,10 +21,11 @@ public record TimeDilationFieldsPayload(List<TimeDilationFieldSnapshot> fields) 
                 buf.writeDouble(field.rate());
                 buf.writeInt(field.age());
                 buf.writeInt(field.durationTicks());
+                buf.writeDouble(field.core());
             },
             buf -> new TimeDilationFieldSnapshot(
                     buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(),
-                    buf.readDouble(), buf.readInt(), buf.readInt()
+                    buf.readDouble(), buf.readInt(), buf.readInt(), buf.readDouble()
             )
     );
 

@@ -112,7 +112,7 @@ public final class TimeDilationManager {
                 .filter(field -> !field.isChronosphere())
                 .map(field -> new TimeDilationFieldSnapshot(
                         field.getX(), field.getY(), field.getZ(), field.fieldRadius(), field.fieldRate(),
-                        field.fieldAge(), field.fieldDurationTicks()))
+                        field.fieldAge(), field.fieldDurationTicks(), field.fieldCore()))
                 .limit(128)
                 .toList();
         if (level.getGameTime() % 4L != 0L && snapshots.size() == tracking.lastSnapshots.size()) {

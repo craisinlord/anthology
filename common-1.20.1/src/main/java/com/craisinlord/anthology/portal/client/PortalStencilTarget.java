@@ -19,19 +19,21 @@ public final class PortalStencilTarget {
     private PortalStencilTarget() {
     }
 
-    public static void prepareMainTarget(RenderTarget target) {
+    public static boolean prepareMainTarget(RenderTarget target) {
         target.bindWrite(true);
         if (stencilBits() > 0) {
             UNSUPPORTED_MAIN_TARGETS.remove(target);
-            return;
+            return false;
         }
         if (Objects.equals(UNSUPPORTED_MAIN_TARGETS.get(target), target.frameBufferId)) {
-            return;
+            return false;
         }
+        boolean depthFormatChanged = false;
         try {
             java.lang.reflect.Method enabled = target.getClass().getMethod("isStencilEnabled");
             if (!Boolean.TRUE.equals(enabled.invoke(target))) {
                 target.getClass().getMethod("enableStencil").invoke(target);
+                depthFormatChanged = true;
             }
         } catch (ReflectiveOperationException ignored) {
         }
@@ -44,6 +46,7 @@ public final class PortalStencilTarget {
                 Anthology.LOGGER.debug("Portal direct stencil is unavailable ({}); using offscreen portal rendering", exception.getMessage());
             }
         }
+        return depthFormatChanged;
     }
 
     public static boolean supportsDirect(RenderTarget target) {

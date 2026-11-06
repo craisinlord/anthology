@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = RenderSectionManager.class, remap = false)
 public abstract class RenderSectionManagerPortalTasksMixin {
-    @Inject(method = "submitDeferredSectionTasks", at = @At("RETURN"), remap = false)
+    @Inject(require = 0, method = "submitDeferredSectionTasks", at = @At("RETURN"), remap = false)
     private void anthology$submitPortalViewTasks(ChunkJobCollector collector, UploadResourceBudget budget, CallbackInfo ci) {
         SodiumPortalTerrain.submitPendingTasks((RenderSectionManagerAccessor) (Object) this, collector, budget);
     }

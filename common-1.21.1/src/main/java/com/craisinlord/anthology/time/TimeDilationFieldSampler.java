@@ -23,7 +23,7 @@ public final class TimeDilationFieldSampler {
             if (distanceSqr >= field.fieldRadiusSqr()) {
                 continue;
             }
-            double falloff = TimeDilationMath.gaussianFalloff(Math.sqrt(distanceSqr), field.fieldRadius());
+            double falloff = TimeDilationMath.fieldFalloff(Math.sqrt(distanceSqr), field.fieldRadius(), field.fieldCore());
             combinedRate *= TimeDilationMath.localFieldRate(field.effectiveFieldRate(), falloff);
         }
         return TimeDilationMath.clampRate(combinedRate);
@@ -54,7 +54,7 @@ public final class TimeDilationFieldSampler {
                 if (distanceSqr >= field.fieldRadiusSqr()) {
                     continue;
                 }
-                falloff = TimeDilationMath.gaussianFalloff(distance, radius);
+                falloff = TimeDilationMath.fieldFalloff(distance, radius, field.fieldCore());
             }
             if (falloff > 0.0D) {
                 combinedRate *= TimeDilationMath.localFieldRate(field.effectiveFieldRate(), falloff);

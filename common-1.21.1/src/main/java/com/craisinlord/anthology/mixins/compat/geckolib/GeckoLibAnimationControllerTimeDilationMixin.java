@@ -14,7 +14,7 @@ public abstract class GeckoLibAnimationControllerTimeDilationMixin<T extends Geo
     @Shadow(remap = false)
     protected T animatable;
 
-    @ModifyReturnValue(method = "adjustTick", at = @At("RETURN"), remap = false)
+    @ModifyReturnValue(require = 0, method = "adjustTick", at = @At("RETURN"), remap = false)
     private double anthology$scaleAnimationTick(double tick) {
         if (this.animatable instanceof Entity entity) {
             return tick * TimeDilationApi.getRate(entity);

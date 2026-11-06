@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "io.redspace.ironsspellbooks.entity.spells.thunderstep.ThunderstepProjectile")
 @Pseudo
 public abstract class IronsSpellbooksThunderstepTimeDilationMixin {
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/thunderstep/ThunderstepProjectile;tickCount:I"))
+    @ModifyExpressionValue(require = 0, method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/thunderstep/ThunderstepProjectile;tickCount:I"))
     private int anthology$dilatedGroundTime(int tickCount) {
         return TimeDilationApi.getDilatedTickCount((Entity) (Object) this);
     }

@@ -16,6 +16,7 @@ public abstract class GeckoLibAnimationControllerTimeDilationMixin {
     protected double lastAnimatableAge;
 
     @ModifyExpressionValue(
+            require = 0,
             method = "checkControllerState",
             at = @At(value = "INVOKE", target = "Lcom/geckolib/animation/AnimationController;safetyCheckTickLinearity(DD)D"),
             remap = false

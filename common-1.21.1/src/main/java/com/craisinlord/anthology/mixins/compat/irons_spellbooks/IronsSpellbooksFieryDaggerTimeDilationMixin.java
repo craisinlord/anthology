@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "io.redspace.ironsspellbooks.entity.spells.fiery_dagger.FieryDaggerEntity")
 @Pseudo
 public abstract class IronsSpellbooksFieryDaggerTimeDilationMixin {
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/fiery_dagger/FieryDaggerEntity;age:I", ordinal = 0))
+    @ModifyExpressionValue(require = 0, method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/fiery_dagger/FieryDaggerEntity;age:I", ordinal = 0))
     private int anthology$dilatedHoverDelay(int age) {
         return age + TimeDilationApi.consumeTicks((Entity) (Object) this, "irons_fiery_dagger_delay") - 1;
     }

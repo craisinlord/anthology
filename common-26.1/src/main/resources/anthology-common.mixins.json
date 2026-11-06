@@ -77,9 +77,13 @@
     "portal.TrackedEntityAccessor"
   ],
   "client": [
+    "gravity.client.AccessibilityOptionsScreenMixin",
     "gravity.client.CameraGravityMixin",
     "gravity.client.ClientPacketListenerGravityMixin",
     "gravity.client.EntityRenderDispatcherGravityMixin",
+    "compat.bettercombat.BetterCombatTargetFinderGravityMixin",
+    "compat.bettercombat.BetterCombatTargetCenterGravityMixin",
+    "compat.bettercombat.BetterCombatSlashParticleGravityMixin",
     "gravity.client.EntityRenderStateGravityMixin",
     "time.LivingEntityRendererAnimationTimeDilationMixin",
     "time.LivingEntityRenderStateTimeDilationMixin",

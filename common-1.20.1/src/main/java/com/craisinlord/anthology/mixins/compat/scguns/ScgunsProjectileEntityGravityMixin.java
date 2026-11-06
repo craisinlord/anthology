@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ScgunsProjectileEntityGravityMixin {
     @Unique private boolean anthology$launchDirectionAdjusted;
 
-    @Inject(method = {"tick", "m_8119_"}, at = @At("HEAD"))
+    @Inject(require = 0, method = {"tick", "m_8119_"}, at = @At("HEAD"))
     private void anthology$prepareScgunsProjectile(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
         LivingEntity shooter = ((ScgunsProjectileAccess) self).anthology$getScgunsShooter();
@@ -64,7 +64,7 @@ public abstract class ScgunsProjectileEntityGravityMixin {
         }
     }
 
-    @Inject(method = {"tick", "m_8119_"}, at = @At("TAIL"))
+    @Inject(require = 0, method = {"tick", "m_8119_"}, at = @At("TAIL"))
     private void anthology$invertScgunsGravity(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
         double modifiedGravity = ((ScgunsProjectileAccess) self).anthology$getScgunsModifiedGravity();

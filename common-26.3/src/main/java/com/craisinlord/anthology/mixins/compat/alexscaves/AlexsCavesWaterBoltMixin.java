@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Pseudo
 public abstract class AlexsCavesWaterBoltMixin {
     @ModifyArg(
+            require = 0,
             method = "tick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 1),
             index = 1

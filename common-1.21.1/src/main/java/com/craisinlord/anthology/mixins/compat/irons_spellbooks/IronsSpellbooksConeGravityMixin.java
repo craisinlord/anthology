@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(targets = "io.redspace.ironsspellbooks.entity.spells.AbstractConeProjectile")
 @Pseudo
 public abstract class IronsSpellbooksConeGravityMixin {
-    @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;subtract(DDD)Lnet/minecraft/world/phys/Vec3;"), index = 1)
+    @ModifyArg(require = 0, method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;subtract(DDD)Lnet/minecraft/world/phys/Vec3;"), index = 1)
     private double anthology$invertConeOffset(double offset) {
         Entity owner = ((Projectile) (Object) this).getOwner();
         return owner != null && GravityApi.isGravityInverted(owner) ? -offset : offset;

@@ -1,5 +1,7 @@
 {
   "effect.anthology.inverted": "Inversé",
   "effect.anthology.inverted.description": "Inverse la gravité de la cible.",
-  "effect.anthology.dilated.description": "Ralentit le passage du temps pour l’entité affectée."
+  "effect.anthology.dilated.description": "Ralentit le passage du temps pour l’entité affectée.",
+  "options.anthology.smoothGravityTransitions": "Transitions de gravité douces",
+  "options.anthology.smoothGravityTransitions.tooltip": "Ralentit et adoucit la caméra lorsque votre gravité s'inverse. Recommandé si les mouvements rapides de l'écran vous incommodent."
 }

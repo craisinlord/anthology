@@ -41,13 +41,13 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         return Math.max(TimeDilationMath.MIN_RATE, TimeDilationApi.getRate(self));
     }
 
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;tickCount:I", ordinal = 1))
+    @ModifyExpressionValue(require = 0, method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;tickCount:I", ordinal = 1))
     private int anthology$dilatedLifetime(int tickCount) {
         Entity self = (Entity) (Object) this;
         return self instanceof TimeDilationTickScaled ? tickCount : TimeDilationApi.getDilatedTickCount(self);
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;handleHitDetection()V"), cancellable = true)
+    @Inject(require = 0, method = "tick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;handleHitDetection()V"), cancellable = true)
     private void anthology$scaleHitDetectionMotion(CallbackInfo ci) {
         this.anthology$unscaledMotion = null;
         this.anthology$scaledMotion = null;
@@ -65,7 +65,7 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         anthology$setRawDeltaMovement(self, this.anthology$scaledMotion);
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;handleHitDetection()V", shift = At.Shift.AFTER))
+    @Inject(require = 0, method = "tick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;handleHitDetection()V", shift = At.Shift.AFTER))
     private void anthology$restoreHitDetectionMotion(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
         if (this.anthology$scaledMotion != null && self.getDeltaMovement() == this.anthology$scaledMotion) {
@@ -75,7 +75,7 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         this.anthology$scaledMotion = null;
     }
 
-    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setPos(Lnet/minecraft/world/phys/Vec3;)V"))
+    @ModifyArg(require = 0, method = "travel", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setPos(Lnet/minecraft/world/phys/Vec3;)V"))
     private Vec3 anthology$scaleTravel(Vec3 position) {
         double rate = this.anthology$motionRate();
         if (Math.abs(rate - TimeDilationMath.NORMAL_RATE) < 0.001D) {
@@ -85,7 +85,7 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         return current.add(position.subtract(current).scale(rate));
     }
 
-    @ModifyArg(method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/util/Utils;slerp(DLnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"), index = 0)
+    @ModifyArg(require = 0, method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/util/Utils;slerp(DLnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"), index = 0)
     private double anthology$scaleHomingStrength(double strength) {
         double rate = this.anthology$motionRate();
         if (Math.abs(rate - TimeDilationMath.NORMAL_RATE) < 0.001D || strength <= 0.0D || strength >= 1.0D) {
@@ -94,7 +94,7 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         return 1.0D - Math.pow(1.0D - strength, rate);
     }
 
-    @Inject(method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
+    @Inject(require = 0, method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
     private void anthology$beginHomingMove(CallbackInfoReturnable<Vec3> cir) {
         if ((Object) this instanceof TimeDilationEntityAccess access) {
             this.anthology$wasInHomingMove = access.anthology$isInTimeDilationMove();
@@ -102,7 +102,7 @@ public abstract class IronsSpellbooksMagicProjectileTimeDilationMixin {
         }
     }
 
-    @Inject(method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", shift = At.Shift.AFTER))
+    @Inject(require = 0, method = "homeTowards", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/entity/spells/AbstractMagicProjectile;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", shift = At.Shift.AFTER))
     private void anthology$endHomingMove(CallbackInfoReturnable<Vec3> cir) {
         if ((Object) this instanceof TimeDilationEntityAccess access) {
             access.anthology$setInTimeDilationMove(this.anthology$wasInHomingMove);

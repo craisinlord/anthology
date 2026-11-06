@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "io.redspace.ironsspellbooks.entity.spells.ice_block.IceBlockProjectile")
 @Pseudo
 public abstract class IronsSpellbooksIceBlockTimeDilationMixin {
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/ice_block/IceBlockProjectile;airTime:I", ordinal = 0))
+    @ModifyExpressionValue(require = 0, method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/ice_block/IceBlockProjectile;airTime:I", ordinal = 0))
     private int anthology$dilatedAirTime(int airTime) {
         return airTime - TimeDilationApi.consumeTicks((Entity) (Object) this, "irons_ice_block_air_time") + 1;
     }

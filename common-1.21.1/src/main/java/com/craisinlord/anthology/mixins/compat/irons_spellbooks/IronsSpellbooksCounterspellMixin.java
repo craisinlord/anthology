@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 @Mixin(targets = "io.redspace.ironsspellbooks.spells.ender.CounterspellSpell")
 @Pseudo
 public abstract class IronsSpellbooksCounterspellMixin {
-    @WrapMethod(method = "onCast")
+    @WrapMethod(require = 0, method = "onCast")
     private void anthology$dispelAnthologyMagic(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData magicData, Operation<Void> original) {
         Vec3 start = entity.getEyePosition();
         IronsSpellbooksCompat.enterPortalOpaque();

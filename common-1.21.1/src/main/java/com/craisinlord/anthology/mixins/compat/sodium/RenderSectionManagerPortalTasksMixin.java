@@ -17,7 +17,7 @@ public abstract class RenderSectionManagerPortalTasksMixin {
     @Shadow(remap = false)
     private Map<TaskQueueType, ArrayDeque<RenderSection>> taskLists;
 
-    @Inject(method = "update", at = @At("TAIL"), remap = false)
+    @Inject(require = 0, method = "update", at = @At("TAIL"), remap = false)
     private void anthology$addPortalViewTasks(CallbackInfo ci) {
         SodiumPortalTerrain.drainPendingTasks(this.taskLists);
     }

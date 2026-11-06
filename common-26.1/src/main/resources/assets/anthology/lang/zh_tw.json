@@ -1,5 +1,7 @@
 {
   "effect.anthology.inverted": "反轉",
   "effect.anthology.inverted.description": "反轉目標的重力。",
-  "effect.anthology.dilated.description": "減緩受影響生物的時間流逝。"
+  "effect.anthology.dilated.description": "減緩受影響生物的時間流逝。",
+  "options.anthology.smoothGravityTransitions": "平滑重力轉換",
+  "options.anthology.smoothGravityTransitions.tooltip": "在重力翻轉時減慢並平滑鏡頭運動。若快速的畫面移動讓你感到不適，建議開啟。"
 }

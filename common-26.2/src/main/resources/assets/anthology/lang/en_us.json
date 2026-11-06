@@ -6,5 +6,7 @@
   "effect.anthology.contracted": "Temporal Contraction",
   "effect.anthology.contracted.description": "Speeds the passage of time for the affected entity.",
   "entity.anthology.time_dilation_field": "Time Dilation Field",
-  "entity.anthology.multipart_part": "Multipart Part"
+  "entity.anthology.multipart_part": "Multipart Part",
+  "options.anthology.smoothGravityTransitions": "Smooth Gravity Transitions",
+  "options.anthology.smoothGravityTransitions.tooltip": "Slows and eases the camera when your gravity flips. Recommended if fast screen movement makes you uncomfortable."
 }

@@ -117,6 +117,7 @@ dependencies {
     compileOnly fg.deobf("maven.modrinth:alexs-caves:${alexscaves_modrinth_version_forge_1_20_1}")
     compileOnly fg.deobf("maven.modrinth:ars-nouveau:${ars_nouveau_modrinth_version_forge_1_20_1}")
     compileOnly fg.deobf("maven.modrinth:irons-spells-n-spellbooks:${irons_spellbooks_modrinth_version_forge_1_20_1}")
+    compileOnly fg.deobf("curse.maven:playeranimator-658587:${playeranimator_curseforge_file_id_forge_1_20_1}")
     compileOnly fg.deobf("maven.modrinth:scorched-guns-2:${scorched_guns_modrinth_version_forge_1_20_1}")
     compileOnly fg.deobf("anthology.compile_jars:embeddium:0.3.31+mc1.20.1")
 

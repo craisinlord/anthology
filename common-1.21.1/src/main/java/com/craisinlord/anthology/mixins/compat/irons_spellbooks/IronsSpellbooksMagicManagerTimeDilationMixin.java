@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 @Mixin(targets = "io.redspace.ironsspellbooks.capabilities.magic.MagicManager")
 @Pseudo
 public abstract class IronsSpellbooksMagicManagerTimeDilationMixin {
-    @WrapMethod(method = "lambda$tick$0(ZLnet/minecraft/world/entity/player/Player;)V")
+    @WrapMethod(require = 0, method = "lambda$tick$0(ZLnet/minecraft/world/entity/player/Player;)V")
     private void anthology$scalePlayerMagicTick(boolean doManaRegen, Player player, Operation<Void> original) {
         int ticks = TimeDilationApi.consumeTicks(player, "irons_magic_tick");
         for (int i = 0; i < ticks && !player.isRemoved(); i++) {

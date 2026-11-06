@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AlexsCavesCandyCaneHookMixin {
     private boolean anthology$launchAdjusted;
 
-    @Inject(method = {"tick", "m_8119_"}, at = @At("HEAD"))
+    @Inject(require = 0, method = {"tick", "m_8119_"}, at = @At("HEAD"))
     private void anthology$rotateManualLaunch(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         if (this.anthology$launchAdjusted) {
@@ -40,6 +40,7 @@ public abstract class AlexsCavesCandyCaneHookMixin {
     }
 
     @ModifyArg(
+            require = 0,
             method = "fling",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"),
             index = 1

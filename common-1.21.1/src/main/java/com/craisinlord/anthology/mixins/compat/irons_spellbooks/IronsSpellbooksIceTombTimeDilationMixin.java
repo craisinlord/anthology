@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "io.redspace.ironsspellbooks.entity.spells.ice_tomb.IceTombEntity")
 @Pseudo
 public abstract class IronsSpellbooksIceTombTimeDilationMixin {
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/ice_tomb/IceTombEntity;tickCount:I", ordinal = 1))
+    @ModifyExpressionValue(require = 0, method = "tick", at = @At(value = "FIELD", target = "Lio/redspace/ironsspellbooks/entity/spells/ice_tomb/IceTombEntity;tickCount:I", ordinal = 1))
     private int anthology$dilatedLifetime(int tickCount) {
         return TimeDilationApi.getDilatedTickCount((Entity) (Object) this);
     }

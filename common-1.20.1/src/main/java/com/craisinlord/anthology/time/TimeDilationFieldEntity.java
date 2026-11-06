@@ -25,9 +25,11 @@ public class TimeDilationFieldEntity extends Entity {
     private static final String RATE_KEY = "Rate";
     private static final String DURATION_KEY = "DurationTicks";
     private static final String AGE_KEY = "Age";
+    private static final String CORE_KEY = "Core";
 
     private int durationTicks = -1;
     private int age;
+    private double core;
     private UUID ownerId;
     private UUID anchorId;
     private int missingAnchorTicks;
@@ -190,6 +192,14 @@ public class TimeDilationFieldEntity extends Entity {
         return TimeDilationMath.effectiveFieldRate(this.fieldRate(), this.age, this.durationTicks);
     }
 
+    public void setFieldCore(double core) {
+        this.core = Math.max(0.0D, Math.min(TimeDilationMath.MAX_FIELD_CORE, core));
+    }
+
+    public double fieldCore() {
+        return this.core;
+    }
+
     public int fieldDurationTicks() {
         return this.durationTicks;
     }
@@ -213,6 +223,7 @@ public class TimeDilationFieldEntity extends Entity {
         this.setFieldRate(tag.getDouble(RATE_KEY));
         this.durationTicks = tag.contains(DURATION_KEY) ? tag.getInt(DURATION_KEY) : -1;
         this.age = tag.getInt(AGE_KEY);
+        this.setFieldCore(tag.getDouble(CORE_KEY));
         this.ownerId = tag.hasUUID("OwnerUuid") ? tag.getUUID("OwnerUuid") : null;
         this.anchorId = tag.hasUUID("AnchorUuid") ? tag.getUUID("AnchorUuid") : null;
         this.visual = !tag.contains("Visual") || tag.getBoolean("Visual");
@@ -226,6 +237,7 @@ public class TimeDilationFieldEntity extends Entity {
         tag.putDouble(RATE_KEY, this.fieldRate());
         tag.putInt(DURATION_KEY, this.durationTicks);
         tag.putInt(AGE_KEY, this.age);
+        tag.putDouble(CORE_KEY, this.core);
         if (this.ownerId != null) {
             tag.putUUID("OwnerUuid", this.ownerId);
         }

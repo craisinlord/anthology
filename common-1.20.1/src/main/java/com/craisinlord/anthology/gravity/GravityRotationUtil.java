@@ -86,10 +86,27 @@ public final class GravityRotationUtil {
         return rotationAroundNegativeZ(-180.0F * GravityApi.getGravityFlipProgress(entity, partialTick));
     }
 
+    public static Quaternionf getWorldRotationQuaternion(float flipProgress) {
+        return rotationAroundNegativeZ(180.0F * flipProgress);
+    }
+
+    public static Quaternionf getCameraRotationQuaternion(float flipProgress) {
+        return rotationAroundNegativeZ(-180.0F * flipProgress);
+    }
+
     public static Quaternionf getCameraViewRotation(Entity entity, float partialTick) {
         Quaternionf rotation = new Quaternionf();
         if (entity != null && (GravityApi.isGravityInverted(entity) || GravityApi.getGravityFlipProgress(entity, partialTick) > 0.0F)) {
             rotation.premul(getCameraRotationQuaternion(entity, partialTick));
+        }
+        rotation.premul(rotationAroundNegativeZ(GravityHooks.cameraRollDegrees(partialTick)));
+        return rotation;
+    }
+
+    public static Quaternionf getCameraViewRotation(float flipProgress, float partialTick) {
+        Quaternionf rotation = new Quaternionf();
+        if (flipProgress > 0.0F) {
+            rotation.premul(getCameraRotationQuaternion(flipProgress));
         }
         rotation.premul(rotationAroundNegativeZ(GravityHooks.cameraRollDegrees(partialTick)));
         return rotation;

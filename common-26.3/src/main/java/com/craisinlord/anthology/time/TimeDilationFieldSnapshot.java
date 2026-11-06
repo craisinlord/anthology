@@ -7,7 +7,8 @@ public record TimeDilationFieldSnapshot(
         double radius,
         double rate,
         int age,
-        int durationTicks
+        int durationTicks,
+        double core
 ) {
     public double radiusSquared() {
         return this.radius * this.radius;

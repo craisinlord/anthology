@@ -1,6 +1,7 @@
 package com.craisinlord.anthology.mixins.gravity.client;
 
 import com.craisinlord.anthology.gravity.GravityRotationUtil;
+import com.craisinlord.anthology.gravity.client.GravityCameraSmoothing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
@@ -30,7 +31,7 @@ public abstract class GameRendererGravityViewMixin {
         if (entity == null) {
             return;
         }
-        Quaternionf rotation = GravityRotationUtil.getCameraViewRotation(entity, partialTick);
+        Quaternionf rotation = GravityRotationUtil.getCameraViewRotation(GravityCameraSmoothing.flipProgress(entity, partialTick), partialTick);
         if (rotation.equals(new Quaternionf())) {
             return;
         }

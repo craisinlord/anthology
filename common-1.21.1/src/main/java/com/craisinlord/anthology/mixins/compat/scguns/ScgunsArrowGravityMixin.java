@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "top.ribs.scguns.entity.projectile.BrassBoltEntity")
 @Pseudo
 public abstract class ScgunsArrowGravityMixin {
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(require = 0, method = "tick", at = @At("TAIL"))
     private void anthology$invertScgunsArrowGravity(CallbackInfo ci) {
         AbstractArrow self = (AbstractArrow) (Object) this;
         if (self.isNoGravity() || (!GravityApi.isGravityInverted(self)

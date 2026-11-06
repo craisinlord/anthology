@@ -21,7 +21,7 @@ public abstract class IronsSpellbooksClientPlayerEventsTimeDilationMixin {
         return player == null ? 1 : TimeDilationApi.consumeTicks(player, timerKey);
     }
 
-    @WrapOperation(method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/capabilities/magic/PlayerRecasts;tickRecasts()V"))
+    @WrapOperation(require = 0, method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/capabilities/magic/PlayerRecasts;tickRecasts()V"))
     private static void anthology$scaleRecasts(PlayerRecasts recasts, Operation<Void> original) {
         int ticks = anthology$consumeTicks("irons_client_recasts");
         for (int i = 0; i < ticks; i++) {
@@ -29,12 +29,12 @@ public abstract class IronsSpellbooksClientPlayerEventsTimeDilationMixin {
         }
     }
 
-    @ModifyArg(method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/capabilities/magic/PlayerCooldowns;tick(I)V"))
+    @ModifyArg(require = 0, method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/capabilities/magic/PlayerCooldowns;tick(I)V"))
     private static int anthology$scaleCooldowns(int ticks) {
         return ticks * anthology$consumeTicks("irons_client_cooldowns");
     }
 
-    @WrapOperation(method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/player/ClientMagicData;handleCastDuration()V"))
+    @WrapOperation(require = 0, method = "onPlayerTick", at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/player/ClientMagicData;handleCastDuration()V"))
     private static void anthology$scaleCastDuration(Operation<Void> original) {
         int ticks = anthology$consumeTicks("irons_client_cast");
         for (int i = 0; i < ticks; i++) {

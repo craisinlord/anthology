@@ -52,7 +52,7 @@ public abstract class EntityMoveMixin {
         this.anthology$lastPlayerMoveY = movement.y;
         if (GravityApi.isGravityInverted(entity) && !this.anthology$loggedInvertedMove) {
             this.anthology$loggedInvertedMove = true;
-            STEP_LOGGER.warn(
+            STEP_LOGGER.debug(
                     "Inverted move entered: entity={} movement={} noPhysics={} onGround={} box={}",
                     entity.getClass().getSimpleName(), movement, entity.noPhysics, entity.onGround(), entity.getBoundingBox());
         }
@@ -158,7 +158,7 @@ public abstract class EntityMoveMixin {
         Entity entity = (Entity) (Object) this;
         if (GravityApi.isGravityInverted(entity) && !this.anthology$loggedInvertedCollide) {
             this.anthology$loggedInvertedCollide = true;
-            STEP_LOGGER.warn(
+            STEP_LOGGER.debug(
                     "Inverted collide entered: entity={} movement={} onGround={} maxUpStep={} box={}",
                     entity.getClass().getSimpleName(), movement, entity.onGround(), entity.maxUpStep(), entity.getBoundingBox());
         }
@@ -252,7 +252,7 @@ public abstract class EntityMoveMixin {
         if (!this.anthology$loggedHorizontalBlock
                 && (localMovement.x != cir.getReturnValue().x || localMovement.z != cir.getReturnValue().z)) {
             this.anthology$loggedHorizontalBlock = true;
-            STEP_LOGGER.warn(
+            STEP_LOGGER.debug(
                     "Inverted horizontal block: localMovement={} localResult={} worldMovement={} worldResult={} onGround={} maxUpStep={} box={}",
                     localMovement, cir.getReturnValue(), this.anthology$collideWorldMovement, worldResult,
                     entity.onGround(), entity.maxUpStep(), entity.getBoundingBox());

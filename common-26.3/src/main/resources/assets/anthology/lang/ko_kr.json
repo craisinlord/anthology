@@ -1,5 +1,7 @@
 {
   "effect.anthology.inverted": "반전",
   "effect.anthology.inverted.description": "대상의 중력을 반전시킵니다.",
-  "effect.anthology.dilated.description": "영향받은 개체의 시간 흐름을 늦춥니다."
+  "effect.anthology.dilated.description": "영향받은 개체의 시간 흐름을 늦춥니다.",
+  "options.anthology.smoothGravityTransitions": "부드러운 중력 전환",
+  "options.anthology.smoothGravityTransitions.tooltip": "중력이 뒤집힐 때 카메라 움직임을 느리고 부드럽게 만듭니다. 빠른 화면 움직임이 불편하다면 권장합니다."
 }

@@ -21,7 +21,7 @@ public abstract class IronsSpellbooksProjectileGravityMixin {
     @Shadow public abstract float getSpeed();
     @Shadow protected abstract double getDefaultGravity();
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(require = 0, method = "tick", at = @At("HEAD"))
     private void anthology$prepareMagicProjectile(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         Entity owner = self.getOwner();
@@ -38,7 +38,7 @@ public abstract class IronsSpellbooksProjectileGravityMixin {
         );
     }
 
-    @Inject(method = "shoot", at = @At("HEAD"), cancellable = true)
+    @Inject(require = 0, method = "shoot", at = @At("HEAD"), cancellable = true)
     private void anthology$rotateMagicProjectileLaunch(Vec3 rotation, CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         Entity owner = self.getOwner();
@@ -53,7 +53,7 @@ public abstract class IronsSpellbooksProjectileGravityMixin {
         ci.cancel();
     }
 
-    @Inject(method = "travel", at = @At("TAIL"))
+    @Inject(require = 0, method = "travel", at = @At("TAIL"))
     private void anthology$invertMagicProjectileGravity(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         if (!GravityApi.isGravityInverted(self) || self.isNoGravity()) {

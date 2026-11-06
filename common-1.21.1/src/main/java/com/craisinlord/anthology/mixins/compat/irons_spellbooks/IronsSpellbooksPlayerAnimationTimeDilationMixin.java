@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "io.redspace.ironsspellbooks.render.animation.AnimationHelper")
 @Pseudo
 public abstract class IronsSpellbooksPlayerAnimationTimeDilationMixin {
-    @ModifyReturnValue(method = "lambda$initializePlayerAnimationFactory$1(Lnet/minecraft/client/player/AbstractClientPlayer;)Ldev/kosmx/playerAnim/api/layered/IAnimation;", at = @At("RETURN"))
+    @ModifyReturnValue(require = 0, method = "lambda$initializePlayerAnimationFactory$1(Lnet/minecraft/client/player/AbstractClientPlayer;)Ldev/kosmx/playerAnim/api/layered/IAnimation;", at = @At("RETURN"))
     private static IAnimation anthology$dilateSpellAnimations(IAnimation animation, @Local(argsOnly = true) AbstractClientPlayer player) {
         if (animation instanceof ModifierLayer<?> layer) {
             layer.addModifier(new TimeDilationSpeedModifier(player), 0);

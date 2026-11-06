@@ -53,6 +53,7 @@
     "compat.irons_spellbooks.IronsSpellbooksSmallMagicArrowTimeDilationMixin",
     "compat.irons_spellbooks.IronsSpellbooksPoisonArrowTimeDilationMixin",
     "compat.irons_spellbooks.IronsSpellbooksThunderstepTimeDilationMixin",
+    "compat.irons_spellbooks.IronsSpellbooksRaycastBuilderPortalMixin",
     "compat.irons_spellbooks.IronsSpellbooksRayVisualPortalMixin",
     "compat.irons_spellbooks.IronsSpellbooksTargetedAreaTimeDilationMixin",
     "compat.irons_spellbooks.IronsSpellbooksTeleportMixin",
@@ -103,9 +104,13 @@
     "portal.TrackedEntityAccessor"
   ],
   "client": [
+    "gravity.client.AccessibilityOptionsScreenMixin",
     "gravity.client.CameraGravityMixin",
     "gravity.client.ClientPacketListenerGravityMixin",
     "gravity.client.EntityRenderDispatcherGravityMixin",
+    "compat.bettercombat.BetterCombatTargetFinderGravityMixin",
+    "compat.bettercombat.BetterCombatTargetCenterGravityMixin",
+    "compat.bettercombat.BetterCombatSlashParticleGravityMixin",
     "time.LivingEntityRendererAnimationTimeDilationMixin",
     "time.ParticleTimeDilationMixin",
     "time.PortalParticleTimeDilationMixin",

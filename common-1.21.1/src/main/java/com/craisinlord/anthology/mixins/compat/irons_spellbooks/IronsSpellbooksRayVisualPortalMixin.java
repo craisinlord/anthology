@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 })
 @Pseudo
 public abstract class IronsSpellbooksRayVisualPortalMixin {
-    @WrapOperation(method = "onCast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
+    @WrapOperation(require = 0, method = "onCast", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
     private boolean anthology$splitVisualAtPortals(Level level, Entity visual, Operation<Boolean> original, @Local(argsOnly = true) LivingEntity caster) {
         List<Entity> segments = IronsSpellbooksCompat.splitRayVisual(level, visual, caster, IronsSpellbooksCompat.consumeRay());
         if (segments == null) {

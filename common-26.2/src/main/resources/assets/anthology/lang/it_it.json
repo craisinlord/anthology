@@ -1,5 +1,7 @@
 {
   "effect.anthology.inverted": "Invertito",
   "effect.anthology.inverted.description": "Inverte la gravità del bersaglio.",
-  "effect.anthology.dilated.description": "Rallenta il passare del tempo per l’entità colpita."
+  "effect.anthology.dilated.description": "Rallenta il passare del tempo per l’entità colpita.",
+  "options.anthology.smoothGravityTransitions": "Transizioni di gravità graduali",
+  "options.anthology.smoothGravityTransitions.tooltip": "Rallenta e ammorbidisce la telecamera quando la gravità si inverte. Consigliato se i movimenti rapidi dello schermo ti causano disagio."
 }

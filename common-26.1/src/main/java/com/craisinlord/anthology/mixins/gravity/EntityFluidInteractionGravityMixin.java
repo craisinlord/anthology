@@ -11,17 +11,17 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(EntityFluidInteraction.class)
 public abstract class EntityFluidInteractionGravityMixin {
-    @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
+    @ModifyExpressionValue(method = {"update(Lnet/minecraft/world/entity/Entity;Z)V", "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
     private double anthology$fixFluidEyeY(double eyeY, @Local(argsOnly = true) Entity entity) {
         return GravityApi.isGravityInverted(entity) ? entity.getEyePosition().y() : eyeY;
     }
 
-    @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBlockX()I"))
+    @ModifyExpressionValue(method = {"update(Lnet/minecraft/world/entity/Entity;Z)V", "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBlockX()I"))
     private int anthology$fixFluidEyeBlockX(int blockX, @Local(argsOnly = true) Entity entity) {
         return GravityApi.isGravityInverted(entity) ? Mth.floor(entity.getEyePosition().x()) : blockX;
     }
 
-    @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBlockZ()I"))
+    @ModifyExpressionValue(method = {"update(Lnet/minecraft/world/entity/Entity;Z)V", "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBlockZ()I"))
     private int anthology$fixFluidEyeBlockZ(int blockZ, @Local(argsOnly = true) Entity entity) {
         return GravityApi.isGravityInverted(entity) ? Mth.floor(entity.getEyePosition().z()) : blockZ;
     }

@@ -25,7 +25,7 @@ public abstract class IronsSpellbooksTeleportMixin {
         throw new AssertionError();
     }
 
-    @WrapMethod(method = "findTeleportLocation")
+    @WrapMethod(require = 0, method = "findTeleportLocation")
     private static Vec3 anthology$teleportThroughPortals(Level level, LivingEntity entity, float maxDistance, Operation<Vec3> original) {
         Vec3 eye = entity.getEyePosition();
         Vec3 look = entity.getLookAngle().normalize();
@@ -42,7 +42,7 @@ public abstract class IronsSpellbooksTeleportMixin {
         return destination;
     }
 
-    @WrapMethod(method = "solveTeleportDestination")
+    @WrapMethod(require = 0, method = "solveTeleportDestination")
     private static Vec3 anthology$solveInvertedDestination(Level level, LivingEntity entity, BlockPos blockPos, Vec3 location, Operation<Vec3> original) {
         if (!GravityApi.isGravityInverted(entity)) {
             return original.call(level, entity, blockPos, location);

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell")
 @Pseudo
 public abstract class ArsNouveauProjectileGravityMixin {
-    @Inject(method = {"tick", "m_8119_"}, at = @At("HEAD"))
+    @Inject(require = 0, method = {"tick", "m_8119_"}, at = @At("HEAD"))
     private void anthology$prepareArsProjectile(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         Entity owner = self.getOwner();
@@ -30,7 +30,7 @@ public abstract class ArsNouveauProjectileGravityMixin {
         }
     }
 
-    @Inject(method = "tickNextPosition", at = @At("TAIL"))
+    @Inject(require = 0, method = "tickNextPosition", at = @At("TAIL"))
     private void anthology$invertArsProjectileGravity(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         if (!GravityApi.isGravityInverted(self) || self.isNoGravity()) {

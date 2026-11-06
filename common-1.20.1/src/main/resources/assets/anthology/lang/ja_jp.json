@@ -1,5 +1,7 @@
 {
   "effect.anthology.inverted": "重力反転",
   "effect.anthology.inverted.description": "対象の重力を反転させます。",
-  "effect.anthology.dilated.description": "影響を受けたエンティティの時間の流れを遅くします。"
+  "effect.anthology.dilated.description": "影響を受けたエンティティの時間の流れを遅くします。",
+  "options.anthology.smoothGravityTransitions": "重力遷移をなめらかにする",
+  "options.anthology.smoothGravityTransitions.tooltip": "重力が反転するときのカメラの動きを遅く、なめらかにします。画面の速い動きで不快に感じる場合におすすめです。"
 }

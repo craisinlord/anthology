@@ -7,6 +7,7 @@ public final class TimeDilationMath {
     public static final double ABSOLUTE_MAX_RATE = 20.0D;
     public static final int FIELD_TRANSITION_TICKS = 20;
     public static final int EFFECT_TRANSITION_TICKS = 20;
+    public static final double MAX_FIELD_CORE = 0.95D;
     private static final double GAUSSIAN_EDGE_EXPONENT = -4.5D;
 
     private TimeDilationMath() {
@@ -52,6 +53,18 @@ public final class TimeDilationMath {
         }
         double normalized = distance / radius;
         return Math.exp(GAUSSIAN_EDGE_EXPONENT * normalized * normalized);
+    }
+
+    public static double fieldFalloff(double distance, double radius, double core) {
+        if (core <= 0.0D) {
+            return gaussianFalloff(distance, radius);
+        }
+        if (distance < 0.0D || distance >= radius || radius <= 0.0D) {
+            return 0.0D;
+        }
+        double normalized = distance / radius;
+        double clampedCore = Math.min(MAX_FIELD_CORE, core);
+        return normalized <= clampedCore ? 1.0D : smoothStep((1.0D - normalized) / (1.0D - clampedCore));
     }
 
     public static double localFieldRate(double fieldRate, double falloff) {

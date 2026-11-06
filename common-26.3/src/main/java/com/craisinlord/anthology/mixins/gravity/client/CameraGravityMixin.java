@@ -3,6 +3,7 @@ package com.craisinlord.anthology.mixins.gravity.client;
 import com.craisinlord.anthology.gravity.GravityHooks;
 import com.craisinlord.anthology.gravity.GravityApi;
 import com.craisinlord.anthology.gravity.GravityRotationUtil;
+import com.craisinlord.anthology.gravity.client.GravityCameraSmoothing;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -56,19 +57,19 @@ public abstract class CameraGravityMixin {
             return;
         }
 
-        float flipProgress = GravityApi.getGravityFlipProgress(entity, partialTick);
+        float flipProgress = GravityCameraSmoothing.flipProgress(entity, partialTick);
         if (!GravityApi.isGravityInverted(entity) && flipProgress <= 0.0F) {
-            this.setPosition(x, y, z);
+            this.setPosition(x, y + GravityCameraSmoothing.verticalShift(), z);
             return;
         }
 
         Vec3 interpolatedPos = entity.getPosition(partialTick);
         float normalEyeHeight = this.eyeHeightOld + (this.eyeHeight - this.eyeHeightOld) * partialTick;
         Vector3f eyeOffset = new Vector3f(0.0F, normalEyeHeight, 0.0F);
-        eyeOffset.rotate(GravityRotationUtil.getWorldRotationQuaternion(entity, partialTick));
+        eyeOffset.rotate(GravityRotationUtil.getWorldRotationQuaternion(flipProgress));
         this.setPosition(
                 interpolatedPos.x + eyeOffset.x(),
-                interpolatedPos.y + eyeOffset.y(),
+                interpolatedPos.y + eyeOffset.y() + GravityCameraSmoothing.verticalShift(),
                 interpolatedPos.z + eyeOffset.z()
         );
     }
@@ -81,8 +82,9 @@ public abstract class CameraGravityMixin {
         if (this.entity == null) {
             return;
         }
-        if (GravityApi.isGravityInverted(this.entity) || GravityApi.getGravityFlipProgress(this.entity, this.anthology$storedTickDelta) > 0.0F) {
-            this.rotation.premul(GravityRotationUtil.getCameraRotationQuaternion(this.entity, this.anthology$storedTickDelta));
+        float flipProgress = GravityCameraSmoothing.flipProgress(this.entity, this.anthology$storedTickDelta);
+        if (GravityApi.isGravityInverted(this.entity) || flipProgress > 0.0F) {
+            this.rotation.premul(GravityRotationUtil.getCameraRotationQuaternion(flipProgress));
         }
         this.rotation.premul(new Quaternionf().fromAxisAngleDeg(0.0F, 0.0F, -1.0F, GravityHooks.cameraRollDegrees(this.anthology$storedTickDelta)));
     }

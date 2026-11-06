@@ -11,28 +11,30 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityCollisionContext.class)
 public abstract class EntityCollisionContextMixin {
-    @Shadow @Final private double entityBottom;
+    @Shadow @Final @Mutable private double entityBottom;
     @Shadow @Final @Nullable private Entity entity;
 
-    @Redirect(
-            method = "<init>(Lnet/minecraft/world/entity/Entity;ZZ)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getY()D")
-    )
-    private static double anthology$fixCollisionContextBottom(Entity entity) {
-        GravityDirection direction = GravityApi.getGravityDirection(entity);
-        if (!direction.isInverted()) {
-            return entity.getY();
+    @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;ZZ)V", at = @At("TAIL"))
+    private void anthology$fixCollisionContextBottom(CallbackInfo ci) {
+        if (this.entity == null) {
+            return;
         }
 
-        return GravityRotationUtil.boxWorldToPlayer(entity.getBoundingBox(), direction).minY;
+        GravityDirection direction = GravityApi.getGravityDirection(this.entity);
+        if (!direction.isInverted()) {
+            return;
+        }
+
+        this.entityBottom = GravityRotationUtil.boxWorldToPlayer(this.entity.getBoundingBox(), direction).minY;
     }
 
     @Inject(method = "isAbove", at = @At("HEAD"), cancellable = true)

@@ -4,6 +4,7 @@ import com.craisinlord.anthology.Anthology;
 import com.craisinlord.anthology.network.AnthologyNetwork;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class MultipartFramework {
     private static final double MAX_ATTACK_DISTANCE_SQR = 10000.0D;
+    private static final AtomicInteger NEXT_CLIENT_PART_ID = new AtomicInteger();
     private static boolean warnedMissingFactory;
 
     public interface PartFactory {
@@ -53,7 +55,11 @@ public final class MultipartFramework {
         if (factory == null) {
             throw new IllegalStateException("Multipart part factory has not been set");
         }
-        return factory.create(owner, index, spec);
+        Entity part = factory.create(owner, index, spec);
+        if (part.level().isClientSide()) {
+            part.setId(NEXT_CLIENT_PART_ID.decrementAndGet());
+        }
+        return part;
     }
 
     public static Entity[] ensureParts(MultipartEntityOwner owner) {

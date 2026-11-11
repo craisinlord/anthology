@@ -13,16 +13,15 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Player.class)
 public abstract class PlayerGravityMixin {
-    @Redirect(
+    @WrapOperation(
             method = "travel",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/player/Player;getLookAngle()Lnet/minecraft/world/phys/Vec3;"))
-    private Vec3 anthology$rotateTravelLookAngle(Player player) {
-        Vec3 lookAngle = player.getLookAngle();
+    private Vec3 anthology$rotateTravelLookAngle(Player player, Operation<Vec3> original) {
+        Vec3 lookAngle = original.call(player);
         GravityDirection direction = GravityApi.getGravityDirection(player);
         if (!direction.isInverted() || player.isFallFlying()) return lookAngle;
         return GravityRotationUtil.vecWorldToPlayer(lookAngle, direction);

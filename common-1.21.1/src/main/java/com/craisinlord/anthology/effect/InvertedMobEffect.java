@@ -12,7 +12,7 @@ public final class InvertedMobEffect extends MobEffect {
     private static final GravityTransition EFFECT_TRANSITION = new GravityTransition(12);
 
     public InvertedMobEffect() {
-        super(MobEffectCategory.HARMFUL, 0x8B0000);
+        super(MobEffectCategory.NEUTRAL, 0x8B0000);
     }
 
     @Override

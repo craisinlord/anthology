@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 public final class InvertedMobEffect extends MobEffect {
     public InvertedMobEffect() {
-        super(MobEffectCategory.HARMFUL, 0x8B0000);
+        super(MobEffectCategory.NEUTRAL, 0x8B0000);
     }
 
     @Override

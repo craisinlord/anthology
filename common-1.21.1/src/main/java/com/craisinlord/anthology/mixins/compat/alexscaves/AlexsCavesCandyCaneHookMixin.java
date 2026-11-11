@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AlexsCavesCandyCaneHookMixin {
     private boolean anthology$launchAdjusted;
 
-    @Inject(require = 0, method = "tick", at = @At("HEAD"))
+    @Inject(require = 0, method = {"tick", "method_5773"}, at = @At("HEAD"))
     private void anthology$rotateManualLaunch(CallbackInfo ci) {
         Projectile self = (Projectile) (Object) this;
         if (this.anthology$launchAdjusted) {

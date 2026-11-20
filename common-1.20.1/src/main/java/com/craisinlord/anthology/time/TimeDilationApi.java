@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +14,9 @@ import net.minecraft.world.phys.Vec3;
 
 public final class TimeDilationApi {
     private static final Map<UUID, Double> SYNCED_CLIENT_RATES = new ConcurrentHashMap<>();
+    // Bumped after every SYNCED_CLIENT_RATES mutation; entities cache their lookup against it
+    // so getRate (called many times per entity per client tick) avoids repeated map lookups.
+    private static final AtomicInteger SYNCED_CLIENT_RATES_VERSION = new AtomicInteger();
     private static final ThreadLocal<Integer> ROTATION_BYPASS_DEPTH = ThreadLocal.withInitial(() -> 0);
     private static final List<Predicate<Entity>> HORIZONTAL_ONLY_MOVEMENT = new CopyOnWriteArrayList<>();
 
@@ -36,14 +40,30 @@ public final class TimeDilationApi {
     public static double getRate(Entity entity) {
         if (entity instanceof TimeDilationEntityAccess access) {
             if (entity.level().isClientSide) {
-                Double syncedRate = SYNCED_CLIENT_RATES.get(entity.getUUID());
-                if (syncedRate != null) {
+                double syncedRate = getSyncedClientRate(entity, access);
+                if (!Double.isNaN(syncedRate)) {
                     return syncedRate;
                 }
             }
             return access.anthology$getTimeDilationRate();
         }
         return TimeDilationMath.NORMAL_RATE;
+    }
+
+    private static double getSyncedClientRate(Entity entity, TimeDilationEntityAccess access) {
+        int version = SYNCED_CLIENT_RATES_VERSION.get();
+        if (access.anthology$getSyncedRateCacheVersion() == version) {
+            return access.anthology$getCachedSyncedRate();
+        }
+        double rate = Double.NaN;
+        if (!SYNCED_CLIENT_RATES.isEmpty()) {
+            Double syncedRate = SYNCED_CLIENT_RATES.get(entity.getUUID());
+            if (syncedRate != null) {
+                rate = syncedRate;
+            }
+        }
+        access.anthology$setCachedSyncedRate(version, rate);
+        return rate;
     }
 
     public static boolean isDilated(Entity entity) {
@@ -88,6 +108,7 @@ public final class TimeDilationApi {
     public static void applySyncedRate(UUID entityUuid, double rate) {
         double clampedRate = TimeDilationMath.clampRate(rate, TimeDilationMath.ABSOLUTE_MAX_RATE);
         SYNCED_CLIENT_RATES.put(entityUuid, clampedRate);
+        SYNCED_CLIENT_RATES_VERSION.incrementAndGet();
     }
 
     public static void clearRate(Entity entity) {
@@ -98,11 +119,14 @@ public final class TimeDilationApi {
                 syncEntityRate(entity, TimeDilationMath.NORMAL_RATE);
             }
         }
-        SYNCED_CLIENT_RATES.remove(entity.getUUID());
+        if (SYNCED_CLIENT_RATES.remove(entity.getUUID()) != null) {
+            SYNCED_CLIENT_RATES_VERSION.incrementAndGet();
+        }
     }
 
     public static void clearSyncedClientRates() {
         SYNCED_CLIENT_RATES.clear();
+        SYNCED_CLIENT_RATES_VERSION.incrementAndGet();
     }
 
     public static boolean hasSyncedClientRates() {

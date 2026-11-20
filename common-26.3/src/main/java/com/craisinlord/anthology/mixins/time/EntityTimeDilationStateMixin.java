@@ -29,6 +29,26 @@ public abstract class EntityTimeDilationStateMixin implements TimeDilationEntity
     private double anthology$dilatedTickCount = -1.0D;
     @Unique
     private int anthology$dilatedTickStamp;
+    @Unique
+    private int anthology$syncedRateCacheVersion = -1;
+    @Unique
+    private double anthology$cachedSyncedRate = Double.NaN;
+
+    @Override
+    public int anthology$getSyncedRateCacheVersion() {
+        return this.anthology$syncedRateCacheVersion;
+    }
+
+    @Override
+    public double anthology$getCachedSyncedRate() {
+        return this.anthology$cachedSyncedRate;
+    }
+
+    @Override
+    public void anthology$setCachedSyncedRate(int version, double rate) {
+        this.anthology$cachedSyncedRate = rate;
+        this.anthology$syncedRateCacheVersion = version;
+    }
 
     @Override
     public double anthology$getDilatedTickCount() {

@@ -36,4 +36,10 @@ public interface TimeDilationEntityAccess {
     int anthology$getDilatedTickStamp();
 
     void anthology$setDilatedTickStamp(int stamp);
+
+    int anthology$getSyncedRateCacheVersion();
+
+    double anthology$getCachedSyncedRate();
+
+    void anthology$setCachedSyncedRate(int version, double rate);
 }
